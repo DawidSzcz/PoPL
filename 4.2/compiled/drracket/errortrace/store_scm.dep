@@ -1,0 +1,1 @@
+("5.3.6" ("be2e2621c35ca2f9ec15a122c5cc6b77ea21d7ef" . "05bf466df63965c87f88af31abff5b60f8c500d9") (collects #"racket" #"vector.rkt") (collects #"eopl" #"eopl.rkt") #"/home/kazik/Documents/Studia/PoPL/Rozw/4.1/drscheme-init.scm")
