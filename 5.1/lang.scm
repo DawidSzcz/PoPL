@@ -19,8 +19,13 @@
       ))
   
   (define the-grammar
-    '((program (expression) a-program)
-
+    '((program (statement) a-program)
+      (statement (identifier "=" statement) assign-state)
+      (statement ("print" expression) print-state)
+      (statement ("if" expression statement statement) if-state)
+      (statement ("while" expression statement) while-state)
+      (statement ("var" (arbno identifier) ";" statement) var-state)
+      (statement ("{" (arbno statement) "}") block-state)
       (expression (number) const-exp)
       (expression
         ("-" "(" expression "," expression ")")
