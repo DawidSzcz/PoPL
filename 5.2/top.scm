@@ -58,9 +58,10 @@
                 (run (cadr test))))
           (else (eopl:error 'run-one "no such test: ~s" test-name))))))
  
-  (run "var x, y; {x = 3; y = 4; print +(x,y)}")
-  (run "var x,y,z; {x = 3; y = 4; z = 0; while not(zero?(x)) {z = +(z,y); x = -(x,1)}; print z}")
-  (run "var x; {x = 3; print x; var x; {x = 4; print x}; print x}")
+  (run "var x = 1, y = 2; {x = 3; y = 4; print +(x,y)}")
+  (run "var x = 3,y = 4,z = 0; {while not(zero?(x)) {z = +(z,y); x = -(x,1)}; print z}")
+  (run "var x = 3; {print x; var x = +(1, x); {print x}; print x}")
+  (run "var x = 3, y = +(3, x); {print +(x, y)}")
   
   )
 

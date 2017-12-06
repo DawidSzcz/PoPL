@@ -10,7 +10,7 @@
   (require "tests.scm")            ; for test-list
   
   (provide run run-all)
-  
+
    ;;; interface for book test ;;;
   (provide test-all)
   (define (test-all) 
@@ -48,7 +48,9 @@
                      sloppy-val)))))
     
   ;; run-one : Sym -> ExpVal
+
   ;; (run-one sym) runs the test whose name is sym
+  
   (define run-one
     (lambda (test-name)
       (let ((the-test (assoc test-name test-list)))
@@ -58,9 +60,7 @@
                 (run (cadr test))))
           (else (eopl:error 'run-one "no such test: ~s" test-name))))))
  
-  (run "var x, y; {x = 3; y = 4; print +(x,y)}")
-  (run "var x,y,z; {x = 3; y = 4; z = 0; while not(zero?(x)) {z = +(z,y); x = -(x,1)}; print z}")
-  (run "var x; {x = 3; print x; var x; {x = 4; print x}; print x}")
+  ;; (run-all)
   
   )
 

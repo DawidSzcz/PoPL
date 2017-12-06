@@ -24,7 +24,7 @@
       (statement ("print" expression) print-state)
       (statement ("if" expression statement statement) if-state)
       (statement ("while" expression statement) while-state)
-      (statement ("var" identifier (arbno "," identifier) ";" statement) var-state)
+      (statement ("var" identifier "=" expression (arbno "," identifier "=" expression) ";" statement) var-state)
       (statement ("{" statement (arbno ";" statement) "}") block-state)
       (expression (number) const-exp)
       (expression

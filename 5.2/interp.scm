@@ -59,11 +59,13 @@
                            (value-of-statement state env)
                            (value-of-statement (while-state exp state) env))
                          (num-val 27)))
-        (var-state (var vars state) 
-                   (let ((new-env (foldl (lambda (nenv var) (extend-env var (newref 0) nenv)) 
-                                         (extend-env var (newref 0) env)
-                                         vars)))
-                     (value-of-statement state new-env))))))
+        (var-state (var exp vars exps state) 
+                   (letrec ((proc-vars 
+                             (lambda (vars exps nenv)
+                               (if (null? vars)
+                                   nenv
+                                   (proc-vars (cdr vars) (cdr exps) (extend-env (car vars) (newref (value-of (car exps) nenv)) nenv)))))) 
+                     (value-of-statement state (proc-vars vars exps (extend-env var (newref (value-of exp env)) env))))))))
   ;; value-of : Exp * Env -> ExpVal
   ;; Page: 118, 119
   (define value-of

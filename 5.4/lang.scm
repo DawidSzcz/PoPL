@@ -1,6 +1,6 @@
 (module lang (lib "eopl.ss" "eopl")                
   
-  ;; language for IMPLICIT-REFS
+  ;; language for MUTABLE-PAIRS
   
   (require "drscheme-init.scm")
   
@@ -19,21 +19,12 @@
       ))
   
   (define the-grammar
-    '((program (statement) a-program)
-      (statement (identifier "=" expression) assign-state)
-      (statement ("print" expression) print-state)
-      (statement ("if" expression statement statement) if-state)
-      (statement ("while" expression statement) while-state)
-      (statement ("var" identifier (arbno "," identifier) ";" statement) var-state)
-      (statement ("{" statement (arbno ";" statement) "}") block-state)
+    '((program (expression) a-program)
+      
       (expression (number) const-exp)
       (expression
        ("-" "(" expression "," expression ")")
        diff-exp)
-      
-      (expression
-       ("+" "(" expression "," expression ")")
-       sum-exp)
       
       (expression
        ("zero?" "(" expression ")")
@@ -67,15 +58,43 @@
        ("begin" expression (arbno ";" expression) "end")
        begin-exp)
       
-      ;; new for implicit-refs
-      
       (expression
        ("set" identifier "=" expression)
        assign-exp)
       
+      ;; new for mutable-pairs
+      
       (expression
-       ("not" "(" expression ")")
-       not-exp)
+       ("newpair" "(" expression "," expression ")")
+       newpair-exp)
+      
+      (expression
+       ("left" "(" expression ")")
+       left-exp)
+      
+      (expression
+       ("setleft" expression "=" expression)
+       setleft-exp)
+      
+      (expression
+       ("right" "(" expression ")")
+       right-exp)
+      
+      (expression
+       ("setright" expression "=" expression)
+       setright-exp)
+      
+      (expression
+       ("newarray" "(" expression "," expression ")")
+       newarray-exp)
+      
+      (expression
+       ("arrayref" "(" expression "," expression ")")
+       arrayref-exp)
+      
+      (expression
+       ("arrayset" "(" expression "," expression "," expression")")
+       arrayset-exp)
       
       ))
   
