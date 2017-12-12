@@ -82,7 +82,15 @@
      (saved-cont continuation?))
     (rand-cont             
      (val1 expval?)
-     (saved-cont continuation?)))
+     (saved-cont continuation?))
+    (block-cont
+     (exps (list-of expression?))
+     (env environment?)
+     (cont continuation?))
+    (set-cont
+     (var identifier?)
+     (env environment?)
+     (cont continuation?)))
   
   ;;;;;;;;;;;;;;;; procedures ;;;;;;;;;;;;;;;;
   
@@ -97,13 +105,13 @@
   (define-datatype environment environment?
     (empty-env)
     (extend-env 
-     (bvar symbol?)
-     (bval reference?)
-     (saved-env environment?))
-    (extend-env-rec
-     (p-name symbol?)
-     (b-var symbol?)
-     (p-body expression?)
-     (saved-env environment?)))
+      (bvar symbol?)
+      (bval reference?)                 ; new for implicit-refs
+      (saved-env environment?))
+    (extend-env-rec*
+      (proc-names (list-of symbol?))
+      (b-vars (list-of symbol?))
+      (proc-bodies (list-of expression?))
+      (saved-env environment?)))
   
   )
