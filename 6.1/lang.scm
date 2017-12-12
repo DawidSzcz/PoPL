@@ -53,6 +53,7 @@
           identifier "(" identifier ")" "=" expression
            "in" expression)
         letrec-exp)
+      (expression ("list" "(" (separated-list expression ",") ")") list-exp)
       
       ))
 
