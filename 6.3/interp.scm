@@ -26,8 +26,54 @@
       (initialize-store!)
       (cases program pgm
         (a-program (exp1)
-                   (value-of/k exp1 (init-env) (end-cont))))))  
+                   (result-of/k exp1 (init-env) (end-cont))))))
   
+  (define result-of/k
+    (lambda (stat env cont)
+      (cases statement stat
+        (print-state (exp cont)
+                     (begin
+                       (write (expval->num (value-of exp env))) (newline)
+                       (apply-com-cont cont (num-val 27))))
+        (assign-state (var exp1)
+                      (value-of/k exp1 env (set-com-cont var env cont)))
+        (block-state (state states)
+                     (begin 
+                       (result-of state env (block-com-cont states env cont))))
+        (if-state (exp state1 state2)
+                  (value-of/k exp (if-com-cont state1 state2 env cont)))
+        (while-state (exp state)
+                     (value-of/k exp (while-com-cont exp state env cont)))
+        (var-state (var vars state)
+                   (let ((new-env (foldl 
+                                   (lambda (nenv var) (extend-env var (newref 0) nenv)) 
+                                   (extend-env var (newref 0) env)
+                                   vars)))
+                     (result-of/k state new-env cont)))
+        ))))
+  
+(define apply-com-cont
+  (lambda (cont val)
+    (cases com-continuation cont
+      (set-com-cont (var env cont)
+                    (begin 
+                      (setref! (apply-env env var) val)
+                      (apply-cont cont (num-val 27))))
+      (block-com-cont (states env cont)
+                      (if (null? states)
+                          (apply-com-cont cont (num-val 27))
+                          (result-of/k (car states) env (block-com-cont (cdr states) env cont))))
+      (if-com-cont (state1 state2 env saved-cont)
+                   (if (expval->bool val)
+                       (result-of/k state1 saved-env saved-cont)
+                       (result-of/k state2 saved-env saved-cont)))
+      (while-com-cont (exp state env saved-cont)
+                      (if (expval->bool val)
+                          (value-of/k exp (while-com-cont exp state env cont))
+                          (apply-com-cont saved-cont (num-val 27))))     
+      
+      )))
+
   ;; value-of/k : Exp * Env * Cont -> FinalAnswer
   ;; Page: 143--146, and 154
   (define value-of/k
@@ -63,9 +109,15 @@
                     (value-of/k exp1 env (set-cont var env cont)))
         )))
   
+    
+  (define apply-cont
+    (lambda (cont val)
+      (if (continuation? cont)
+          (apply-sim-cont cont val)
+          (apply-com-cont cont val))))
   ;; apply-cont : Cont * ExpVal -> FinalAnswer
   ;; Page: 148
-  (define apply-cont
+  (define apply-sim-cont
     (lambda (cont val)
       (cases continuation cont
         (end-cont () 
@@ -120,7 +172,6 @@
                                (extend-env var (newref arg) saved-env)
                                cont)))))
   
-  (value-of-program (scan&parse "letrec f(x) = -(x,1) in (f 33)"))
   
   )
 

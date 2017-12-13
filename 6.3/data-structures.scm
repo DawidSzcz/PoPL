@@ -54,6 +54,26 @@
   
   ;; Page: 148
   (define identifier? symbol?)
+ 
+  (define-datatype com-continuation com-continuation?               
+    (block-com-cont
+     (states (list-of statements?))
+     (saved-env environment?)
+     (saved-cont com-continuation?))
+    (if-com-cont
+     (state1 statement?)
+     (state1 statement?)
+     (saved-env environment?)
+     (saved-cont com-continuation?))
+    (set-com-cont
+     (var identifier?)
+     (saved-env environment?)
+     (saved-cont com-continuation?))
+    (while-com-cont 
+     (exp expression?)
+     (state1 statement?)
+     (saved-env environment?)
+     (saved-cont com-continuation?)))
   
   (define-datatype continuation continuation?
     (end-cont)                 
