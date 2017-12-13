@@ -1,6 +1,6 @@
 (module lang (lib "eopl.ss" "eopl")                
   
-  ;; grammar for the LETREC language
+  ;; language for IMPLICIT-REFS
 
   (require "drscheme-init.scm")
   
@@ -50,10 +50,20 @@
 
       (expression
         ("letrec"
-          identifier "(" identifier ")" "=" expression
+          (arbno identifier "(" identifier ")" "=" expression)
            "in" expression)
         letrec-exp)
       
+      (expression
+        ("begin" expression (arbno ";" expression) "end")
+        begin-exp)
+
+      ;; new for implicit-refs
+
+      (expression
+        ("set" identifier "=" expression)
+        assign-exp)
+
       ))
 
   ;;;;;;;;;;;;;;;; sllgen boilerplate ;;;;;;;;;;;;;;;;
