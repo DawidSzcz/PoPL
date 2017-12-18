@@ -1,4 +1,4 @@
-(module top (lib "eopl.ss" "eopl")
+(module top-interp-registers (lib "eopl.ss" "eopl")
   
   ;; top level module.  Loads all required pieces.
   ;; Run the test suite with (run-all).
@@ -6,18 +6,11 @@
   (require "drscheme-init.scm")
   (require "data-structures.scm")  ; for expval constructors
   (require "lang.scm")             ; for scan&parse
-
-  (require "interp.scm")           
- 
+  (require "interp-registers.scm")   ; or use register version.
   (require "tests.scm")            ; for test-list
   
-   
-   ;;; interface for book test ;;;
-  (provide test-all)
-  (define (test-all) 
-    (run-all))
-
-
+  (provide run run-all)
+  
   ;;;;;;;;;;;;;;;; interface to test harness ;;;;;;;;;;;;;;;;
   
   ;; run : String -> ExpVal
@@ -44,13 +37,12 @@
       (cond
         ((number? sloppy-val) (num-val sloppy-val))
         ((boolean? sloppy-val) (bool-val sloppy-val))
-        ((list? sloppy-val) (list-val (map sloppy->expval sloppy-val)))
         (else
          (eopl:error 'sloppy->expval 
                      "Can't convert sloppy value to expval: ~s"
                      sloppy-val)))))
     
-  ;; run-one : Sym -> ExpVal
+  ;; run-one : Symbol -> ExpVal
 
   ;; (run-one sym) runs the test whose name is sym
   
@@ -63,14 +55,7 @@
                 (run (cadr test))))
           (else (eopl:error 'run-one "no such test: ~s" test-name))))))
  
-  ;; make sure this is initially off.
-  (trace-apply-procedure #f)
-
-  (run-all)
-
-  ;; to generate the big trace in the text, say
-  ;; (trace-apply-procedure #t)
-  ;; (run-one 'text-example-1.2)
+  ;; (run-all)
   
   )
 
