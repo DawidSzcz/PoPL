@@ -5,7 +5,7 @@
   
   (define test-list
     '(
-      "test(X, Y) :- X is Y. test(3, Z)." (hash "Z" 3)
+      "test(X(), Y()) :- is(X(), 1). test(3, Z()):-." (hash "Z" 3)
       )
     )
   )
