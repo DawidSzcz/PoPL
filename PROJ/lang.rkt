@@ -2,6 +2,13 @@
   
   (provide (all-defined-out))
   
+  
+  (define get-var
+    (lambda (var)
+     (cases term var
+       (a-variable (v) v)
+       (else (eopl:error 'expected-variable)))))
+  
   (define w-l
       (lambda (l)
         (for-each
@@ -19,7 +26,7 @@
    (lambda (t)
      (cases term t
        (a-term (id terms)
-               (w-l id " (")
+               (w-l '(id " ("))
                (print-terms terms)
                (display ")"))
        (a-variable (var) (write var))
@@ -49,10 +56,10 @@
       (term ("=" "(" term "," term ")") a-unification)
       (term ("is" "(" term "," expression ")") a-assignment)
       (term (number) a-literal)
-      (expression ("-" "(" expression "," expression ")") a-diff)
-      (expression ("+" "(" expression "," expression ")") a-add)
-      (expression ("*" "(" expression "," expression ")") a-mult)
-      (expression (identifier) var-exp)
+      (expression ("-" "(" expression "," expression ")") diff-exp)
+      (expression ("+" "(" expression "," expression ")") add-exp)
+      (expression ("*" "(" expression "," expression ")") mult-exp)
+      (expression (variable) var-exp)
       (expression (number) const-exp)   ))
   
   (sllgen:make-define-datatypes the-lexical-spec the-grammar)

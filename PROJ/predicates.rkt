@@ -1,6 +1,6 @@
 (module lang racket
   
-  (provide add-predicate initialize-predicates get-predicates print-predicates call-predicate )
+  (provide register-clause initialize-predicates get-predicates print-predicates get-predicate )
   (require "lang.rkt")
   
   (define preds 'uninitialized)
@@ -9,7 +9,7 @@
     (lambda ()
       (set! preds (make-hash))))
   
-  (define add-predicate
+  (define register-clause
     (lambda (name predicate)
       (if (hash-has-key? preds name)
           (hash-set! preds name (append (hash-ref preds name) (list predicate)))
@@ -37,7 +37,7 @@
             1)
           variants)))))
   
-  (define call-predicate
+  (define get-predicate
     (lambda (id)
       (hash-ref preds id)))
   

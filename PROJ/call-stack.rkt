@@ -1,13 +1,17 @@
 (module call-stack racket 
   (require "predicates.rkt")
   
+  (provide call-predicate)
+  
   (define cs 'uninitialized)
   
   (define init-cs
     (lambda ()
       (set! cs '())))
   
-  (define call 
+  (define call-predicate
     (lambda (id)
-      (set! cs (cons (call-predicate id)))))
+      (let ((clauses (get-predicate id)))
+        (set! cs (list (cdr clauses) cs))
+        (car clauses))))
   )
