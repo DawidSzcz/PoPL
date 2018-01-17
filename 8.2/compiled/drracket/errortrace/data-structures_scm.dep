@@ -1,1 +1,1 @@
-("5.3.6" ("4ef144cb6514ab15a1713f27326c79afddd940df" . "3e1526a76af18c89c4875c9bfb10c06800072503") (collects #"eopl" #"eopl.rkt") #"/home/kazik/Documents/Studia/PoPL/Rozw/8.2/lang.scm")
+("6.10.1" ("4ef144cb6514ab15a1713f27326c79afddd940df" . "bbdbf970cbb6e7bc7716148905c5f242ee2cafac") #"/home/i258352/Dokumenty/PoPL/8.2/lang.scm" (collects #"eopl" #"eopl.rkt") (collects #"errortrace" #"errortrace-key.rkt"))

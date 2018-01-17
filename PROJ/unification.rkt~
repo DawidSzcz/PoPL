@@ -10,8 +10,8 @@
   
   (define unify
     (lambda (env arg val)
-      (hash-set! env arg val)
-      env))
+      (let ((h (hash-set! env arg val)))
+        h)))
   
   (define resolve-var
     (lambda (hash key)

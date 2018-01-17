@@ -1,1 +1,1 @@
-("5.3.6" ("e63270cb7e4398ee7e068081713231f9352c05e2" . "732c3d378fe8e8b69d9ff30847e293055ab5917d") #"/home/kazik/Documents/Studia/PoPL/Rozw/8.1/drscheme-init.scm" (collects #"eopl" #"eopl.rkt"))
+("6.10.1" ("e63270cb7e4398ee7e068081713231f9352c05e2" . "6aaa01110cab850005ce2c18e11aee1fce95617a") #"/home/i258352/Dokumenty/PoPL/8.1/drscheme-init.scm" (collects #"eopl" #"eopl.rkt") (collects #"errortrace" #"errortrace-key.rkt"))

@@ -1,1 +1,1 @@
-("5.3.6" ("f82747e86854a7166468fd7db9d4739299797024" . "dc0f537fddf5be56c71e19a3fd720bf0ec1b94d6") (collects #"eopl" #"eopl.rkt"))
+("6.10.1" ("f82747e86854a7166468fd7db9d4739299797024" . "8931ef2747550a4559b5b3fc224d4f74a0a2a76c") (collects #"eopl" #"eopl.rkt") (collects #"errortrace" #"errortrace-key.rkt"))

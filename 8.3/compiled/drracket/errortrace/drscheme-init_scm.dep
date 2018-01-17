@@ -1,1 +1,1 @@
-("5.3.6" ("c541d5c5062ae68894604e2f176d07872f2189ee" . "f3de4fa8d83dbed2d6ce4f2c0315e4a253d154ba") (collects #"mzscheme" #"main.rkt") (collects #"mzlib" #"trace.rkt") (collects #"mzlib" #"pretty.rkt") (collects #"scheme" #"mzscheme.rkt"))
+("6.10.1" ("c541d5c5062ae68894604e2f176d07872f2189ee" . "097362765793eba2a196d631b73578e749462960") (collects #"errortrace" #"errortrace-key.rkt") (collects #"mzlib" #"pretty.rkt") (collects #"mzlib" #"trace.rkt") (collects #"mzscheme" #"main.rkt"))
