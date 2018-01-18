@@ -13,7 +13,7 @@
         (const-exp (num) num)
         
         ;\commentbox{ (value-of (var-exp \x{}) \r) = (apply-env \r \x{})}
-        (var-exp (var) (resolve-var env (a-variable var)))
+        (var-exp (var) (resolve-var env var))
         
         ;\commentbox{\diffspec}
         (diff-exp (exp1 exp2)

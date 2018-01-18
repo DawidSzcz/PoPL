@@ -22,20 +22,23 @@
   (define process-program
     (lambda (prog)
       (initialize-predicates)
+      (initialize-unification)
       (cases program prog
         (a-program (term-query clauses)
                    (process-clauses clauses)
                    (cases term term-query
                      (a-term (id args) 
-                             (call args (call-predicate id)))
+                             (let ((env (make-init-env args)))
+                               (call env args (call-predicate id))
+                               (print-unif)))
                      (else (eopl:error 'invalid-clause-head))
                      )))))
   
   (define call
-    (lambda (values predicate)
+    (lambda (old-env values predicate)
       (let* ((args (car predicate))
              (clauses (cadr predicate))
-             (return (unify-call args values)))
+             (return (unify-call old-env args values)))
         (if (null? clauses)
             return
             (process (car clauses) return )))))
@@ -48,11 +51,11 @@
         (a-variable (var) var)
         (a-unification (t1 t2) (unify (get-var t1) t2))
         (a-assignment (t1 exp) (let* ((var (get-var t1))
-                                     (e (value-of exp env))
-                                     (h (unify env var e))) h))
+                                      (e (value-of exp env))
+                                      (h (unify env var e))) h))
         (a-literal (num) num))))
   
   (process-program(scan&parse "test(3, $z) ? test($z, $y) :- is($y, $z)."  ))
-                
+  
   )
 
