@@ -52,7 +52,7 @@
         (a-unification (t1 t2) (unify (get-var t1) t2))
         (a-assignment (t1 exp) (let* ((var (get-var t1))
                                       (e (value-of exp env))
-                                      (h (unify env var e))) h))
+                                      (h (unify env var (value e)))) h))
         (a-literal (num) num))))
   
   (process-program(scan&parse "test(3, $z) ? test($z, $y) :- is($y, $z)."  ))

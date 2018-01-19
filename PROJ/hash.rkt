@@ -15,5 +15,5 @@
     (lambda (h k) (hash-has-key? h k)))
   
   (define h-ref
-    (lambda (h k) (hash-ref h k)))
+    (lambda (h k [f (lambda () (error 'not-in-hash (list hash k)))]) (hash-ref h k)))
   )
