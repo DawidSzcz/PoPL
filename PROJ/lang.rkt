@@ -1,13 +1,24 @@
 (module lang (lib "eopl.ss" "eopl") 
+  (require "hash.rkt")
   
   (provide (all-defined-out))
   
+  
+  (define-datatype retype retype?
+    (fail (msg string?))
+    (environment (env h?)))
   
   (define get-var
     (lambda (var)
      (cases term var
        (a-variable (v) v)
        (else (eopl:error 'expected-variable)))))
+  
+    (define get-env
+    (lambda (result)
+     (cases retype result
+       (environment (env) env)
+       (else (eopl:error 'expected-environment)))))
   
   (define w-l
       (lambda (l)
