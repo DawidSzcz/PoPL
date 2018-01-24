@@ -2,7 +2,8 @@
   (require "hash.rkt")
   
   (provide (all-defined-out))
-  
+ 
+  (define tests #f)
   
   (define-datatype retype retype?
     (fail (msg string?))
@@ -18,13 +19,13 @@
     (lambda (result)
      (cases retype result
        (environment (env) env)
-       (else (eopl:error 'expected-environment)))))
+       (else result))))
   
   (define w-l
       (lambda (l)
         (for-each
-         (lambda (e) (display e)))
-        l))
+         (lambda (e) (display e))
+        l)))
   
   (define print-terms
     (lambda (terms) 
@@ -37,7 +38,7 @@
    (lambda (t)
      (cases term t
        (a-term (id terms)
-               (w-l '(id " ("))
+               (w-l (list id " ("))
                (print-terms terms)
                (display ")"))
        (a-variable (var) (write var))

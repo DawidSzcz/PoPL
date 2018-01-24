@@ -20,7 +20,8 @@
   
   (define print-predicates
     (lambda () 
-      (print-hash preds)))
+      (print-hash preds)
+      (newline)))
   
   (define print-hash
     (lambda (hash)
