@@ -30,31 +30,36 @@
                    (cases term term-query
                      (a-term (id args) 
                              (letrec ((env (make-init-env args))
-                                       (backtrack (lambda (clause)
-                                                    (call (cadr clause) (caddr clause) (car clause))
-                                                    (display (resolve-query env)) (newline)
-                                                    (backtrack (call-next)))))
-                                      (call-predicate id args env)
-                                      (backtrack (call-next)))
-                             )
-                     (else (eopl:error 'invalid-query term-query))
-                     )))))
+                                      (backtrack (lambda ()
+                                                   (if (not (has-clauses?))
+                                                       (let () (display "no more solutions") (newline))
+                                                       (let ((clause  (call-next)))
+                                                         ;(display clause) (newline)
+                                                         (cases retype (call clause)
+                                                           (fail (f) (backtrack))
+                                                           (environment (e) 
+                                                                        ;(print-unif)
+                                                                        (display (resolve-query env)) 
+                                                                        (newline)
+                                                                        (backtrack))))))))
+                               (call-predicate id args env)
+                               (backtrack)))
+                     (else (eopl:error 'invalid-query term-query)))
+                   (display "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&") (newline)))))
   
   (define call
-    (lambda (env values predicate)
+    (lambda (clause)
       ;(print-unif)
       ;(print-counter)
-      (let* ((args (car predicate))
-             (clauses (cadr predicate))
-             (new-env (unify-call env args values))
-             (env (process-clauses clauses new-env env)))
+      (let* ((args (caar clause))
+             (clauses (cadar clause))
+             (new-env (unify-call (cadr clause) args (caddr clause)))
+             (env (process-clauses clauses new-env (cadr clause))))
         (cases retype env
-          (fail (string) 
-                ;(print-cs) 
-                (let ((new-clause (call-next)))
-                  ;(display new-clause) (newline)
-                  ;(print-unif) 
-                  (call (cadr new-clause) (caddr new-clause) (car new-clause))))
+          (fail (string)
+                (if (has-clauses?) 
+                    (call (call-next))
+                    (fail "no more solutions")))
           (else env))
         )))
   
@@ -70,21 +75,33 @@
   
   (define process
     (lambda (t env)
-      (cases term t
-        (a-term (id args)
-                (call-predicate id args env)
-                (call (call-next)))
-        (a-variable (var) env)
-        (a-unification (t1 t2) (unify (get-var t1) t2))
-        (a-assignment (t1 exp) (let* ((e (value-of exp env))
-                                      (h (unify env t1 (value e)))) h))
-        (a-literal (num) env))))
+      (let ((r (cases term t(a-term (id args)
+                                    (call-predicate id args env)
+                                    (call (call-next)))
+                 (a-variable (var) env)
+                 (a-unification (t1 t2) (unify (get-var t1) t2))
+                 (a-assignment (t1 exp) (let* ((e (value-of exp env))
+                                               (h (unify env t1 (value e)))) h))
+                 (a-cut () (cut-stack) env)
+                 (a-literal (num) env))))
+        ;(print-unif)
+        ;(display r) (newline)
+        r)))
 
 
-  (process-program(scan&parse "pow(10, $z) ? pow(1, 1) :- . pow($y, $z) :- is($a, -($y,1)); pow($a, $r); is($z, *($y, $r)). pow($a, $b) :- is($b, $a)."  ))
-  (process-program(scan&parse "pow(10, $z) ? pow(1, 1) :- . pow($y, $z) :- is($a, -($y,1)); pow($a, $r); is($z, *($y, $r))."  ))
+  (process-program(scan&parse "
+pow(50, $z) ? 
+pow($X, $Z):-
+    aux($X, 1, 1, $Z).
+aux($X, $X, $Z, $Z) :- !.
+aux($A, $B, $P, $P) :- . 
+aux($X, $Y, $P, $R) :-
+    is($Y1, +($Y,1)) ;
+    is($P1, *($P, $Y1)) ;
+    aux($X, $Y1, $P1, $R)."))
+  (process-program(scan&parse "pow(10, $z) ? pow(1, 1) :- !. pow($y, $z) :- is($a, -($y,1)); pow($a, $r); is($z, *($y, $r))."  ))
   (process-program(scan&parse "test($z) ? test($z) :- is($z, 4); is($z, 3). test(4) :-."  ))
-  (process-program(scan&parse "pow(1, $z) ? pow(1, 1) :- . pow($y, $z) :- is($a, -($y,1)); pow($a, $r); is($z, *($y, $r))."  ))
+  (process-program(scan&parse "pow(1, $z) ? pow(1, 1) :- !. pow($y, $z) :- is($a, -($y,1)); pow($a, $r); is($z, *($y, $r))."  ))
 
   (process-program(scan&parse "test(3, $z, $y) ? test($z, $y, 1) :- is($y, $z)."  ))
   (process-program(scan&parse "test(3, $z, $y, $k) ? test($z, $y, 1, $r) :- is($y, $z); t($r). t(5) :-."  ))

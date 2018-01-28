@@ -3,7 +3,7 @@
   
   (provide (all-defined-out))
  
-  (define tests #f)
+  (define tests #t)
   
   (define-datatype retype retype?
     (fail (msg string?))
@@ -44,7 +44,8 @@
        (a-variable (var) (write var))
        (a-unification (t1 t2) (print-term t1) (display " = ") (print-term t2))
        (a-assignment (t1 t2) (print-term t1) (display " is ") (write t2))
-       (a-literal (num) (write num)))))
+       (a-literal (num) (write num))
+       (a-cut () (write "!")))))
        
   
   (define the-lexical-spec
@@ -67,6 +68,7 @@
       (term (variable) a-variable)
       (term ("=" "(" term "," term ")") a-unification)
       (term ("is" "(" term "," expression ")") a-assignment)
+      (term ("!") a-cut)
       (term (number) a-literal)
       (expression ("-" "(" expression "," expression ")") diff-exp)
       (expression ("+" "(" expression "," expression ")") add-exp)

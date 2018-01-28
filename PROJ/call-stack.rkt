@@ -4,7 +4,7 @@
   (require "lang.rkt")
   (require "unification.rkt")
   
-  (provide print-cs call-predicate call-next)
+  (provide cut-stack has-clauses? print-cs call-predicate call-next)
   
   (define cs '())
   
@@ -22,9 +22,17 @@
   (define call-predicate
     (lambda (id args env)
       (let ((clauses (get-predicate id)))
-        (set! cs (cons (list (cdr clauses) (environment (hash-copy (get-env env))) args (get-unif-copy)) cs))
-        ;(display cs) (newline)
-        (car clauses))))
+        (set! cs (cons (list clauses (environment (hash-copy (get-env env))) args (get-unif-copy)) cs)))))
+  
+  (define has-clauses?
+    (lambda ()
+      (if (null? cs)
+          #f
+          (if (null? (caar cs))
+              (let () 
+                (set! cs (cdr cs))
+                (has-clauses?))
+              #t))))
   
   (define call-next
     (lambda ()
@@ -35,8 +43,27 @@
             (call-next))
           (let ((cur-pred (car cs)))
             (set! cs (cons (list (cdar cur-pred) (cadr cur-pred) (caddr cur-pred) (cadddr cur-pred)) (cdr cs)))
-            (set-unif (cadddr cur-pred))
+            (set-unif (h-copy (cadddr cur-pred)))
+            ;(print-cl cur-pred)
             (list (caar cur-pred) (cadr cur-pred) (caddr cur-pred) )))))
+  
+  (define print-cl
+    (lambda (cur-pred)  
+      (display 'call-next------------------------------------------) (newline)
+      (display  'args ) (newline)
+      (display (caaar cur-pred)) (newline)
+      (display 'clauses ) (newline)
+      (display (cadaar cur-pred)) (newline)
+      (display 'env) (newline)
+      (display (cadr cur-pred)) (newline)
+      (display 'values) (newline)
+      (display (caddr cur-pred)) (newline)
+      (display 'unif) (newline)
+      (display (cadddr cur-pred)) (newline)
+      (display '---------------------------------------------------) (newline)))
+  
+  (define cut-stack
+    (lambda () (set! cs (cdr cs))))
   
   (define test-call-next
     (lambda (u expected)

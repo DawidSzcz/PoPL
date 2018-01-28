@@ -191,12 +191,13 @@
   
   (define resolve-query 
     (lambda (opac-env)
-      (let ((env (get-env opac-env)))
+      (let ((env (get-env opac-env))
+            (result (make-h)))
         (for-each
          (lambda (key)
-           (h-set! env key (resolve-var opac-env key)))
+           (h-set! result key (resolve-var opac-env key)))
          (h-keys env))
-        env)))
+        result)))
   
   (when tests
     (test-resolve (h (list (list (variable 3) (value 3)) 
@@ -215,6 +216,32 @@
      (value 3)
      (list (h (list (list '$x (variable 0)))) (h (list (list (variable 0) (value 3))) )))   
 
+    (test-unify-call 
+     (h (list(list (variable 0) (variable 2))
+       (list (variable 1)(value 2))
+       (list (variable 2)(value 1))
+       (list (variable 3)(value 2))
+       (list (variable 4)(value 2))
+       (list (variable 5)(value 1))
+       (list (variable 6)(value 1))
+       (list (variable 7)(value 2))
+       (list (variable 8)(value 1))
+       (list (variable 9)(value 1))
+       (list (variable 10)(value 1))
+       (list (variable 11)(value 2))
+       (list (variable 12)(value 2))))
+     13
+     (environment (h (list (list '$X (variable 7))
+         (list '$P (variable 9))
+         (list '$Y (variable 8))
+         (list '$R (variable 10))
+         (list '$Y1 (variable 11))
+         (list '$P1 (variable 12)))))
+     (list (a-variable '$X) (a-variable '$X) (a-variable '$Z) (a-variable '$Z))
+     (list (a-variable '$X) (a-variable '$Y1) (a-variable '$P1) (a-variable '$R))
+     1)
+    
+    
     (test-unify-call 
      (h (list(list (variable 3) (value 2)) (list (variable 1) (value 3)) (list (variable 0) (variable 2))))
      4
